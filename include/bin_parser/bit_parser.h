@@ -165,38 +165,38 @@ bit_parser_status_t bit_parser_extract_double(bit_parser_t *inst, double *res);
     } while (0)
 #endif
 
-#define BIT_PARSER_EXTRACT_INTEGER_(inst_, out_, out_type_, n_bits_, unsigned_prefix, bswap) \
-    do {                                                                                     \
-        int bits_in_type = sizeof(out_type_) * 8;                                            \
-        out_type_ hi_bits = bits_in_type - (inst_->iter % bits_in_type);                     \
-        int idx_low = inst_->iter / bits_in_type;                                            \
-        if (hi_bits < n_bits_) {                                                             \
-            unsigned_prefix##out_type_ high;                                                 \
-            memcpy((void *)&high, (void *)&inst_->buf[idx_low], sizeof(high));               \
-            high = bswap(high);                                                              \
-            unsigned_prefix##out_type_ low;                                                  \
-            memcpy((void *)&low, (void *)&inst_->buf[idx_low + sizeof(low)], sizeof(low));   \
-            low = bswap(low);                                                                \
-            low >>= hi_bits;                                                                 \
-            low += high << (inst_->iter % bits_in_type);                                     \
-            memcpy(out_, &low, sizeof(low));                                                 \
-            *out_ >>= (bits_in_type - n_bits);                                               \
-        }                                                                                    \
-        else {                                                                               \
-            unsigned_prefix##out_type_ low;                                                  \
-            memcpy((void *)&low, (void *)&inst_->buf[idx_low], sizeof(low));                 \
-            low = bswap(low);                                                                \
-            low <<= (inst_->iter % bits_in_type);                                            \
-            memcpy(out_, &low, sizeof(low));                                                 \
-            *out_ >>= bits_in_type - n_bits;                                                 \
-        }                                                                                    \
+#define BIT_PARSER_EXTRACT_INTEGER_(inst_, out_, out_type_, n_bits_, unsigned_prefix, bswap_) \
+    do {                                                                                      \
+        int bits_in_type = sizeof(out_type_) * 8;                                             \
+        out_type_ hi_bits = bits_in_type - (inst_->iter % bits_in_type);                      \
+        int idx_low = inst_->iter / bits_in_type;                                             \
+        if (hi_bits < n_bits_) {                                                              \
+            unsigned_prefix##out_type_ high;                                                  \
+            memcpy((void *)&high, (void *)&inst_->buf[idx_low], sizeof(high));                \
+            high = bswap_(high);                                                              \
+            unsigned_prefix##out_type_ low;                                                   \
+            memcpy((void *)&low, (void *)&inst_->buf[idx_low + sizeof(low)], sizeof(low));    \
+            low = bswap_(low);                                                                \
+            low >>= hi_bits;                                                                  \
+            low += high << (inst_->iter % bits_in_type);                                      \
+            memcpy(out_, &low, sizeof(low));                                                  \
+            *out_ >>= (bits_in_type - n_bits_);                                               \
+        }                                                                                     \
+        else {                                                                                \
+            unsigned_prefix##out_type_ low;                                                   \
+            memcpy((void *)&low, (void *)&inst_->buf[idx_low], sizeof(low));                  \
+            low = bswap_(low);                                                                \
+            low <<= (inst_->iter % bits_in_type);                                             \
+            memcpy(out_, &low, sizeof(low));                                                  \
+            *out_ >>= bits_in_type - n_bits_;                                                 \
+        }                                                                                     \
     } while (0)
 
-#define BIT_PARSER_EXTRACT_UINT(inst_, out_, out_type_, n_bits_, bswap) \
-    BIT_PARSER_EXTRACT_INTEGER_(inst_, out_, out_type_, n_bits, , bswap)
+#define BIT_PARSER_EXTRACT_UINT(inst_, out_, out_type_, n_bits_, bswap_) \
+    BIT_PARSER_EXTRACT_INTEGER_(inst_, out_, out_type_, n_bits_, , bswap_)
 
-#define BIT_PARSER_EXTRACT_INT(inst_, out_, out_type_, n_bits_, bswap) \
-    BIT_PARSER_EXTRACT_INTEGER_(inst_, out_, out_type_, n_bits, u, bswap)
+#define BIT_PARSER_EXTRACT_INT(inst_, out_, out_type_, n_bits_, bswap_) \
+    BIT_PARSER_EXTRACT_INTEGER_(inst_, out_, out_type_, n_bits, u, bswap_)
 
 extern inline void bit_parser_init(bit_parser_t *inst,
                                    const char *buf,
@@ -298,6 +298,28 @@ extern inline bit_parser_status_t bit_parser_extract_i64(bit_parser_t *inst,
     BIT_PARSER_EXTRACT_INT(inst, res, int64_t, n_bits, bin_parser_ntoh_64);
     inst->iter += n_bits;
 
+    return BIT_PARSER_OK;
+}
+
+extern inline bit_parser_status_t bit_parser_extract_float(bit_parser_t *inst, float *res) {
+    int float_size_bits = CHAR_BIT * sizeof(float);
+    BIT_PARSER_CHECK_OVERFLOW(inst, float_size_bits);
+    BIT_PARSER_CHECK_PARAM_SIZE(inst, float_size_bits, float);
+    uint32_t tmp;
+    BIT_PARSER_EXTRACT_UINT(inst, &tmp, uint32_t, float_size_bits, bin_parser_ntoh_32);
+    memcpy(res, &tmp, sizeof(tmp));
+    inst->iter += float_size_bits;
+    return BIT_PARSER_OK;
+}
+
+extern inline bit_parser_status_t bit_parser_extract_double(bit_parser_t *inst, double *res) {
+    int double_size_bits = CHAR_BIT * sizeof(double);
+    BIT_PARSER_CHECK_OVERFLOW(inst, double_size_bits);
+    BIT_PARSER_CHECK_PARAM_SIZE(inst, double_size_bits, double);
+    uint64_t tmp;
+    BIT_PARSER_EXTRACT_UINT(inst, &tmp, uint64_t, double_size_bits, bin_parser_ntoh_64);
+    memcpy(res, &tmp, sizeof(tmp));
+    inst->iter += double_size_bits;
     return BIT_PARSER_OK;
 }
 

@@ -247,3 +247,19 @@ TEST(parser_tests, i64) {
     status = bit_parser_extract_i64(&parser, &res, 1);
     ASSERT_EQ(status, BIT_PARSER_EFULL);
 }
+
+TEST(parser_tests, f64) {
+    uint8_t buf[] = {64, 12, 0, 0, 0, 0, 0, 0};
+
+    bit_parser_t parser;
+
+    bit_parser_init(&parser, (char *)buf, sizeof(buf) * CHAR_BIT);
+    double res = 0.0;
+
+    bit_parser_status_t status = bit_parser_extract_double(&parser, &res);
+    ASSERT_EQ(status, BIT_PARSER_OK);
+    ASSERT_EQ(res, 3.5);
+
+    status = bit_parser_extract_double(&parser, &res);
+    ASSERT_EQ(status, BIT_PARSER_EFULL);
+}
