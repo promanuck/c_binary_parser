@@ -90,19 +90,37 @@ extern inline bitp_status_t bitp_packer_add_i8(bitp_packer_t *inst, int8_t val, 
     return BITP_OK;
 }
 
+#define BITP_PACK_WORD(inst_, word_, n_bits_)                                           \
+    do {                                                                                \
+        int num_bytes_ = (n_bits_) / CHAR_BIT;                                          \
+        int rem_ = (n_bits_)-num_bytes_ * CHAR_BIT;                                     \
+        bitp_packer_add_u8_no_check((inst_), (word_) >> (num_bytes_ * CHAR_BIT), rem_); \
+        for (int i_ = 0; i_ < num_bytes_; ++i_) {                                       \
+            bitp_packer_add_u8_no_check((inst_),                                        \
+                                        (word_) >> ((num_bytes_ - i_ - 1) * CHAR_BIT),  \
+                                        CHAR_BIT);                                      \
+        }                                                                               \
+    } while (0)
+
 extern inline bitp_status_t bitp_packer_add_u16(bitp_packer_t *inst, uint16_t val, size_t n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, uint16_t);
     BITP_CHECK_PARAM_RANGE(val, n_bits, 0);
 
-    int num_bytes = n_bits / CHAR_BIT;
-    int rem = n_bits - num_bytes * CHAR_BIT;
+    BITP_PACK_WORD(inst, val, n_bits);
 
-    bitp_packer_add_u8_no_check(inst, val >> (num_bytes * CHAR_BIT), rem);
+    return BITP_OK;
+}
 
-    for (int i = 0; i < num_bytes; ++i) {
-        bitp_packer_add_u8_no_check(inst, val >> ((num_bytes - 1 - i) * CHAR_BIT), CHAR_BIT);
-    }
+extern inline bitp_status_t bitp_packer_add_i16(bitp_packer_t *inst, int16_t val, size_t n_bits) {
+    BITP_CHECK_OVERFLOW(inst, n_bits);
+    BITP_CHECK_PARAM_SIZE(inst, n_bits, int16_t);
+    BITP_CHECK_PARAM_RANGE(val, n_bits, 1);
+
+    uint16_t valu = (uint16_t)val;
+    valu &= (1 << n_bits) - 1;
+
+    BITP_PACK_WORD(inst, valu, n_bits);
 
     return BITP_OK;
 }
