@@ -90,4 +90,21 @@ extern inline bitp_status_t bitp_packer_add_i8(bitp_packer_t *inst, int8_t val, 
     return BITP_OK;
 }
 
+extern inline bitp_status_t bitp_packer_add_u16(bitp_packer_t *inst, uint16_t val, size_t n_bits) {
+    BITP_CHECK_OVERFLOW(inst, n_bits);
+    BITP_CHECK_PARAM_SIZE(inst, n_bits, uint16_t);
+    BITP_CHECK_PARAM_RANGE(val, n_bits, 0);
+
+    int num_bytes = n_bits / CHAR_BIT;
+    int rem = n_bits - num_bytes * CHAR_BIT;
+
+    bitp_packer_add_u8_no_check(inst, val >> (num_bytes * CHAR_BIT), rem);
+
+    for (int i = 0; i < num_bytes; ++i) {
+        bitp_packer_add_u8_no_check(inst, val >> ((num_bytes - 1 - i) * CHAR_BIT), CHAR_BIT);
+    }
+
+    return BITP_OK;
+}
+
 #endif /* INCLUDE_BITP_PACKER_H_ */
