@@ -132,21 +132,21 @@ typedef enum bin_parser_status_tag { BITP_OK = 0, BITP_EFULL, BITP_EINVALID_ARG 
 #if BITP_CHECK_RANGE == 0
 #define BITP_CHECK_PARAM_RANGE(val_, n_bits_, is_signed_)
 #else
-#define BITP_CHECK_PARAM_RANGE(val_, n_bits_, is_signed_)              \
-    do {                                                               \
-        uint64_t max_val_u_ = 0xFFFFFFFFFFFFFFFFULL >> (64 - n_bits_); \
-        if (is_signed_) {                                              \
-            int64_t max_val_i_ = max_val_u_ / 2;                       \
-            int64_t min_val_i_ = -max_val_i_ - 1;                      \
-            if (val_ > max_val_i_ || val_ < min_val_i_) {              \
-                return BITP_EINVALID_ARG;                              \
-            }                                                          \
-        }                                                              \
-        else {                                                         \
-            if ((uint64_t)val_ > max_val_u_) {                         \
-                return BITP_EINVALID_ARG;                              \
-            }                                                          \
-        }                                                              \
+#define BITP_CHECK_PARAM_RANGE(val_, n_bits_, is_signed_)                   \
+    do {                                                                    \
+        uint64_t max_val_u_ = 0xFFFFFFFFFFFFFFFFULL >> (64 - n_bits_);      \
+        if (is_signed_) {                                                   \
+            int64_t max_val_i_ = max_val_u_ / 2;                            \
+            int64_t min_val_i_ = -max_val_i_ - 1;                           \
+            if ((int64_t)val_ > max_val_i_ || (int64_t)val_ < min_val_i_) { \
+                return BITP_EINVALID_ARG;                                   \
+            }                                                               \
+        }                                                                   \
+        else {                                                              \
+            if ((uint64_t)val_ > max_val_u_) {                              \
+                return BITP_EINVALID_ARG;                                   \
+            }                                                               \
+        }                                                                   \
     } while (0)
 #endif
 

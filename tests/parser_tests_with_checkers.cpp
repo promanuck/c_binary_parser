@@ -248,6 +248,22 @@ TEST(parser_tests, i64) {
     ASSERT_EQ(status, BITP_EFULL);
 }
 
+TEST(parser_tests, f32) {
+    uint8_t buf[] = {64, 32, 0, 0};
+
+    bitp_parser_t parser;
+
+    bitp_parser_init(&parser, (char *)buf, sizeof(buf) * CHAR_BIT);
+    float res = 0.0;
+
+    bitp_status_t status = bitp_parser_extract_float(&parser, &res);
+    ASSERT_EQ(status, BITP_OK);
+    ASSERT_EQ(res, 2.5);
+
+    status = bitp_parser_extract_float(&parser, &res);
+    ASSERT_EQ(status, BITP_EFULL);
+}
+
 TEST(parser_tests, f64) {
     uint8_t buf[] = {64, 12, 0, 0, 0, 0, 0, 0};
 

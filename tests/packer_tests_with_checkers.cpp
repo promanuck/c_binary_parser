@@ -133,3 +133,167 @@ TEST(packer_tests, i16) {
         ASSERT_EQ(buf[i], expected[i]);
     }
 }
+
+TEST(packer_tests, u32) {
+    uint8_t buf[] = {0xFF, 0xFE, 0xFF, 0xAB};
+
+    bitp_packer_t packer;
+
+    bitp_packer_init(&packer, (char *)buf, CHAR_BIT * sizeof(buf), 1);
+
+    bitp_status_t status = bitp_packer_add_u32(&packer, 0x1, 33);
+    ASSERT_NE(status, BITP_OK);
+
+    status = bitp_packer_add_u32(&packer, 16, 4);
+    ASSERT_EQ(status, BITP_EINVALID_ARG);
+
+    status = bitp_packer_add_u32(&packer, 6, 3);
+    ASSERT_EQ(status, BITP_OK);
+
+    status = bitp_packer_add_u32(&packer, 257351543, 28);
+    ASSERT_EQ(status, BITP_OK);
+
+    status = bitp_packer_add_u32(&packer, 1, 1);
+    ASSERT_EQ(status, BITP_OK);
+
+    status = bitp_packer_add_u32(&packer, 1, 1);
+    ASSERT_EQ(status, BITP_EFULL);
+
+    uint8_t expected[] = {0xDE, 0xAD, 0xBE, 0xEF};
+
+    for (size_t i = 0; i < sizeof(buf); ++i) {
+        ASSERT_EQ(buf[i], expected[i]);
+    }
+}
+
+TEST(packer_tests, i32) {
+    uint8_t buf[] = {0xFF, 0xFE, 0xFF, 0xAB};
+
+    bitp_packer_t packer;
+
+    bitp_packer_init(&packer, (char *)buf, CHAR_BIT * sizeof(buf), 1);
+
+    bitp_status_t status = bitp_packer_add_i32(&packer, 0x1, 33);
+    ASSERT_NE(status, BITP_OK);
+
+    status = bitp_packer_add_i32(&packer, 16, 4);
+    ASSERT_EQ(status, BITP_EINVALID_ARG);
+
+    status = bitp_packer_add_i32(&packer, -2, 3);
+    ASSERT_EQ(status, BITP_OK);
+
+    status = bitp_packer_add_i32(&packer, -11083913, 28);
+    ASSERT_EQ(status, BITP_OK);
+
+    status = bitp_packer_add_i32(&packer, -1, 1);
+    ASSERT_EQ(status, BITP_OK);
+
+    status = bitp_packer_add_i32(&packer, 1, 1);
+    ASSERT_EQ(status, BITP_EFULL);
+
+    uint8_t expected[] = {0xDE, 0xAD, 0xBE, 0xEF};
+
+    for (size_t i = 0; i < sizeof(buf); ++i) {
+        ASSERT_EQ(buf[i], expected[i]);
+    }
+}
+
+TEST(packer_tests, u64) {
+    uint8_t buf[] = {0xFF, 0xFE, 0xFF, 0xAB, 0xFF, 0xFE, 0xFF, 0xAB};
+
+    bitp_packer_t packer;
+
+    bitp_packer_init(&packer, (char *)buf, CHAR_BIT * sizeof(buf), 1);
+
+    bitp_status_t status = bitp_packer_add_u64(&packer, 0x1, 65);
+    ASSERT_NE(status, BITP_OK);
+
+    status = bitp_packer_add_u64(&packer, 16, 4);
+    ASSERT_EQ(status, BITP_EINVALID_ARG);
+
+    status = bitp_packer_add_u64(&packer, 0xD, 4);
+    ASSERT_EQ(status, BITP_OK);
+    status = bitp_packer_add_u64(&packer, 0xEADBEEFFEEFABBULL, 56);
+    ASSERT_EQ(status, BITP_OK);
+    status = bitp_packer_add_u64(&packer, 0xA, 4);
+    ASSERT_EQ(status, BITP_OK);
+
+    status = bitp_packer_add_u64(&packer, 1, 1);
+    ASSERT_EQ(status, BITP_EFULL);
+
+    uint8_t expected[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEF, 0xAB, 0xBA};
+
+    for (size_t i = 0; i < sizeof(buf); ++i) {
+        ASSERT_EQ(buf[i], expected[i]);
+    }
+}
+
+TEST(packer_tests, i64) {
+    uint8_t buf[] = {0xFF, 0xFE, 0xFF, 0xAB, 0xFF, 0xFE, 0xFF, 0xAB};
+
+    bitp_packer_t packer;
+
+    bitp_packer_init(&packer, (char *)buf, CHAR_BIT * sizeof(buf), 1);
+
+    bitp_status_t status = bitp_packer_add_i64(&packer, 0x1, 65);
+    ASSERT_NE(status, BITP_OK);
+
+    status = bitp_packer_add_i64(&packer, 16, 4);
+    ASSERT_EQ(status, BITP_EINVALID_ARG);
+
+    status = bitp_packer_add_i64(&packer, -3, 4);
+    ASSERT_EQ(status, BITP_OK);
+    status = bitp_packer_add_i64(&packer, -0x15241100110545LL, 56);
+    ASSERT_EQ(status, BITP_OK);
+    status = bitp_packer_add_i64(&packer, -6, 4);
+    ASSERT_EQ(status, BITP_OK);
+
+    status = bitp_packer_add_i64(&packer, 1, 1);
+    ASSERT_EQ(status, BITP_EFULL);
+
+    uint8_t expected[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEF, 0xAB, 0xBA};
+
+    for (size_t i = 0; i < sizeof(buf); ++i) {
+        ASSERT_EQ(buf[i], expected[i]);
+    }
+}
+
+TEST(packer_tests, f32) {
+    uint8_t buf[] = {0xFF, 0xFE, 0xFF, 0xAB};
+
+    bitp_packer_t packer;
+
+    bitp_packer_init(&packer, (char *)buf, CHAR_BIT * sizeof(buf), 1);
+
+    bitp_status_t status = bitp_packer_add_float(&packer, 2.5);
+    ASSERT_EQ(status, BITP_OK);
+
+    status = bitp_packer_add_u32(&packer, 1, 1);
+    ASSERT_EQ(status, BITP_EFULL);
+
+    uint8_t expected[] = {64, 32, 0, 0};
+
+    for (size_t i = 0; i < sizeof(buf); ++i) {
+        ASSERT_EQ(buf[i], expected[i]);
+    }
+}
+
+TEST(packer_tests, f64) {
+    uint8_t buf[] = {0xFF, 0xFE, 0xFF, 0xAB, 0xFF, 0xFE, 0xFF, 0xAB};
+
+    bitp_packer_t packer;
+
+    bitp_packer_init(&packer, (char *)buf, CHAR_BIT * sizeof(buf), 1);
+
+    bitp_status_t status = bitp_packer_add_double(&packer, 3.5);
+    ASSERT_EQ(status, BITP_OK);
+
+    status = bitp_packer_add_u32(&packer, 1, 1);
+    ASSERT_EQ(status, BITP_EFULL);
+
+    uint8_t expected[] = {64, 12, 0, 0, 0, 0, 0, 0};
+
+    for (size_t i = 0; i < sizeof(buf); ++i) {
+        ASSERT_EQ(buf[i], expected[i]);
+    }
+}

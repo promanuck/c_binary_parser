@@ -125,4 +125,72 @@ extern inline bitp_status_t bitp_packer_add_i16(bitp_packer_t *inst, int16_t val
     return BITP_OK;
 }
 
+extern inline bitp_status_t bitp_packer_add_u32(bitp_packer_t *inst, uint32_t val, size_t n_bits) {
+    BITP_CHECK_OVERFLOW(inst, n_bits);
+    BITP_CHECK_PARAM_SIZE(inst, n_bits, uint32_t);
+    BITP_CHECK_PARAM_RANGE(val, n_bits, 0);
+
+    BITP_PACK_WORD(inst, val, n_bits);
+
+    return BITP_OK;
+}
+
+extern inline bitp_status_t bitp_packer_add_i32(bitp_packer_t *inst, int32_t val, size_t n_bits) {
+    BITP_CHECK_OVERFLOW(inst, n_bits);
+    BITP_CHECK_PARAM_SIZE(inst, n_bits, int32_t);
+    BITP_CHECK_PARAM_RANGE(val, n_bits, 1);
+
+    uint32_t valu = (uint32_t)val;
+    valu &= (1 << n_bits) - 1;
+
+    BITP_PACK_WORD(inst, valu, n_bits);
+
+    return BITP_OK;
+}
+
+extern inline bitp_status_t bitp_packer_add_u64(bitp_packer_t *inst, uint64_t val, size_t n_bits) {
+    BITP_CHECK_OVERFLOW(inst, n_bits);
+    BITP_CHECK_PARAM_SIZE(inst, n_bits, uint64_t);
+    BITP_CHECK_PARAM_RANGE(val, n_bits, 0);
+
+    BITP_PACK_WORD(inst, val, n_bits);
+
+    return BITP_OK;
+}
+
+extern inline bitp_status_t bitp_packer_add_i64(bitp_packer_t *inst, int64_t val, size_t n_bits) {
+    BITP_CHECK_OVERFLOW(inst, n_bits);
+    BITP_CHECK_PARAM_SIZE(inst, n_bits, int64_t);
+    BITP_CHECK_PARAM_RANGE(val, n_bits, 1);
+
+    uint64_t valu = (uint64_t)val;
+    valu &= (1ULL << n_bits) - 1;
+
+    BITP_PACK_WORD(inst, valu, n_bits);
+
+    return BITP_OK;
+}
+
+extern inline bitp_status_t bitp_packer_add_float(bitp_packer_t *inst, float val) {
+    BITP_CHECK_OVERFLOW(inst, CHAR_BIT * 4);
+
+    uint32_t valu;
+    memcpy(&valu, &val, 4);
+
+    BITP_PACK_WORD(inst, valu, CHAR_BIT * 4);
+
+    return BITP_OK;
+}
+
+extern inline bitp_status_t bitp_packer_add_double(bitp_packer_t *inst, double val) {
+    BITP_CHECK_OVERFLOW(inst, CHAR_BIT * 8);
+
+    uint64_t valu;
+    memcpy(&valu, &val, 8);
+
+    BITP_PACK_WORD(inst, valu, CHAR_BIT * 8);
+
+    return BITP_OK;
+}
+
 #endif /* INCLUDE_BITP_PACKER_H_ */
