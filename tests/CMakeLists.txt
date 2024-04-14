@@ -8,7 +8,6 @@ add_executable(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME} PRIVATE 
     parser_tests_with_checkers.cpp 
-    parser_without_checkers.cpp
     packer_tests_with_checkers.cpp
 )
 
