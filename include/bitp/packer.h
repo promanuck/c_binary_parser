@@ -90,16 +90,18 @@ extern inline bitp_status_t bitp_packer_add_i8(bitp_packer_t *inst, int8_t val, 
     return BITP_OK;
 }
 
-#define BITP_PACK_WORD(inst_, word_, n_bits_)                                           \
-    do {                                                                                \
-        int num_bytes_ = (n_bits_) / CHAR_BIT;                                          \
-        int rem_ = (n_bits_)-num_bytes_ * CHAR_BIT;                                     \
-        bitp_packer_add_u8_no_check((inst_), (word_) >> (num_bytes_ * CHAR_BIT), rem_); \
-        for (int i_ = 0; i_ < num_bytes_; ++i_) {                                       \
-            bitp_packer_add_u8_no_check((inst_),                                        \
-                                        (word_) >> ((num_bytes_ - i_ - 1) * CHAR_BIT),  \
-                                        CHAR_BIT);                                      \
-        }                                                                               \
+#define BITP_PACK_WORD(inst_, word_, n_bits_)                                               \
+    do {                                                                                    \
+        int num_bytes_ = (n_bits_) / CHAR_BIT;                                              \
+        int rem_ = (n_bits_)-num_bytes_ * CHAR_BIT;                                         \
+        if (rem_) {                                                                         \
+            bitp_packer_add_u8_no_check((inst_), (word_) >> (num_bytes_ * CHAR_BIT), rem_); \
+        }                                                                                   \
+        for (int i_ = 0; i_ < num_bytes_; ++i_) {                                           \
+            bitp_packer_add_u8_no_check((inst_),                                            \
+                                        (word_) >> ((num_bytes_ - i_ - 1) * CHAR_BIT),      \
+                                        CHAR_BIT);                                          \
+        }                                                                                   \
     } while (0)
 
 extern inline bitp_status_t bitp_packer_add_u16(bitp_packer_t *inst, uint16_t val, size_t n_bits) {
