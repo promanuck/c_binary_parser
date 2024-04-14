@@ -42,7 +42,9 @@ int parse_nb_bcch_bch_msg(void) {
 ### Packer
 
 1.  Init packer instance.
-    `void bitp_packer_init(bitp_packer_t *inst, char *buf, size_t buf_len_bits, int reset_buffer)`
+    ```c
+    void bitp_packer_init(bitp_packer_t *inst, char *buf, size_t buf_len_bits, int reset_buffer)
+    ```
     where:
     * inst - bitp_packer_t inst;
     * buf - preallocated buffer with size at least buf_len_bits/CHAR_BIT. This buffer will contain resulting message.
@@ -52,10 +54,10 @@ int parse_nb_bcch_bch_msg(void) {
 
 1. Pack unsigned integer
    ```c
-   bitp_status_t bitp_packer_add_u8(bitp_packer_t *inst, uint8_t val, size_t n_bits);
-   bitp_status_t bitp_packer_add_u16(bitp_packer_t *inst, uint16_t val, size_t n_bits);
-   bitp_status_t bitp_packer_add_u32(bitp_packer_t *inst, uint32_t val, size_t n_bits);
-   bitp_status_t bitp_packer_add_u64(bitp_packer_t *inst, uint64_t val, size_t n_bits);
+   bitp_status_t bitp_packer_add_u8(bitp_packer_t *inst, uint8_t val, size_t n_bits)
+   bitp_status_t bitp_packer_add_u16(bitp_packer_t *inst, uint16_t val, size_t n_bits)
+   bitp_status_t bitp_packer_add_u32(bitp_packer_t *inst, uint32_t val, size_t n_bits)
+   bitp_status_t bitp_packer_add_u64(bitp_packer_t *inst, uint64_t val, size_t n_bits)
    ```
    where
    * inst - bitp_packer_t inst;
@@ -66,10 +68,10 @@ int parse_nb_bcch_bch_msg(void) {
 
 1. Pack signed integer (two's complement)
    ```c
-   bitp_status_t bitp_packer_add_i8(bitp_packer_t *inst, int8_t val, size_t n_bits);
-   bitp_status_t bitp_packer_add_i16(bitp_packer_t *inst, int16_t val, size_t n_bits);
-   bitp_status_t bitp_packer_add_i32(bitp_packer_t *inst, int32_t val, size_t n_bits);
-   bitp_status_t bitp_packer_add_i64(bitp_packer_t *inst, int64_t val, size_t n_bits);
+   bitp_status_t bitp_packer_add_i8(bitp_packer_t *inst, int8_t val, size_t n_bits)
+   bitp_status_t bitp_packer_add_i16(bitp_packer_t *inst, int16_t val, size_t n_bits)
+   bitp_status_t bitp_packer_add_i32(bitp_packer_t *inst, int32_t val, size_t n_bits)
+   bitp_status_t bitp_packer_add_i64(bitp_packer_t *inst, int64_t val, size_t n_bits)
    ```
    where
    * inst - bitp_packer_t inst;
@@ -78,26 +80,86 @@ int parse_nb_bcch_bch_msg(void) {
   
    returns `BITP_OK` in case of success. It can return error if runtime checkings are enabled (see [Configuration](#configuration))
 
-1. Pack floats
+1. Pack float (IEEE 754, single and double precision)
    ```c
-    bitp_status_t bitp_packer_add_float(bitp_packer_t *inst, float val);
-    bitp_status_t bitp_packer_add_double(bitp_packer_t *inst, double val);
+    bitp_status_t bitp_packer_add_float(bitp_packer_t *inst, float val)
+    bitp_status_t bitp_packer_add_double(bitp_packer_t *inst, double val)
    ```
    where
    * inst - bitp_packer_t inst;
    * val - value to pack;
   
    returns `BITP_OK` in case of success. It can return error if runtime checkings are enabled (see [Configuration](#configuration))
+
 ### Parser
+
+1.  Init parser instance.
+    ```c
+    void bitp_parser_init(bitp_parser_t *inst, const char *buf, size_t buf_len_bits);
+    ```
+    where:
+    * inst - bitp_parser_t inst;
+    * buf - buffer with size at least buf_len_bits/CHAR_BIT. This buffer should contain parsing message.
+    Lifetime of this buffer should be greater or equal to inst;
+    * buf_len_bits - message size, bits.
+
+1. Skip bits:
+    ```c
+    bitp_status_t bitp_parser_skip(bitp_parser_t *inst, size_t n_bits);
+    ```
+    where:
+    * inst - bitp_parser_t inst;
+    * n_bits - number of bits to skip.
+  
+   returns `BITP_OK` in case of success. It can return error if runtime checkings are enabled (see [Configuration](#configuration))
+   
+1. Parse unsigned integer
+   ```c
+   bitp_status_t bitp_parser_extract_u8(bitp_parser_t *inst, uint8_t *res, unsigned n_bits)
+   bitp_status_t bitp_parser_extract_u16(bitp_parser_t *inst, uint16_t *res, unsigned n_bits)
+   bitp_status_t bitp_parser_extract_u32(bitp_parser_t *inst, uint32_t *res, unsigned n_bits)
+   bitp_status_t bitp_parser_extract_u64(bitp_parser_t *inst, uint64_t *res, unsigned n_bits)
+   ```
+   where
+   * inst - bitp_parser_t inst;
+   * res - variable to store extracted value;
+   * n_bits - number of bits to extract.
+  
+   returns `BITP_OK` in case of success. It can return error if runtime checkings are enabled (see [Configuration](#configuration))
+
+1. Parse signed integer (two's complement)
+   ```c
+   bitp_status_t bitp_parser_extract_i8(bitp_parser_t *inst, int8_t *res, unsigned n_bits)
+   bitp_status_t bitp_parser_extract_i16(bitp_parser_t *inst, int16_t *res, unsigned n_bits)
+   bitp_status_t bitp_parser_extract_i32(bitp_parser_t *inst, int32_t *res, unsigned n_bits)
+   bitp_status_t bitp_parser_extract_i64(bitp_parser_t *inst, int64_t *res, unsigned n_bits);
+   ```
+   where
+   * inst - bitp_parser_t inst;
+   * res - variable to store extracted value;
+   * n_bits - number of bits to extract.
+  
+   returns `BITP_OK` in case of success. It can return error if runtime checkings are enabled (see [Configuration](#configuration))
+
+1. Pack float (IEEE 754, single and double precision)
+   ```c
+    bitp_status_t bitp_packer_add_float(bitp_packer_t *inst, float val)
+    bitp_status_t bitp_packer_add_double(bitp_packer_t *inst, double val)
+   ```
+   where
+   * inst - bitp_packer_t inst;
+   * val - value to pack;
+  
+   returns `BITP_OK` in case of success. It can return error if runtime checkings are enabled (see [Configuration](#configuration))
+
 
 ## Build
 
-This project is header-only library. 
+This project is a header-only library. 
 
-If you using CMake, you can add it using add_subdirectory and
-link it with `target_link_libraries` command. 
+If you use CMake, you can add it using `add_subdirectory` and link with `target_link_libraries` command. 
 
-If you using another build system, just copy all files in inlcude directory.
+If you use another build system, just copy the include directory of the project.
 
 ## Configuration
 
@@ -105,18 +167,18 @@ There are several configuration options in the project. You can enable/disable t
 adding following compile definitons:
 
 * BITP_CHECK_BUFFER_BOUNDARY - runtime checking access violations in the preallocated
- buffer (e.g. buffer overflow). Default - disabled.
+ buffer (e.g. buffer overflow)
 * BITP_CHECK_PARAM - runtime checking the size of the output parameter (e.g. if you try decode 
-16 bits in uint8_t).  Default - disabled.
+16 bits in uint8_t)
 * BITP_CHECK_RANGE - runtime checking the ability to pack value into a given number of bits 
-(e.g. if you try to encode value 255 into 4 bit-integer). Default - disabled.
+(e.g. if you try to encode value 255 into 4 bit-integer).
 * BITP_CHECK_ALL - enable all checkers.
-
 
 It's assumed that checkers will be enabled in the debug build and disabled in the release build. 
 
 ## Restrictions
 
-* ANSI C99 or later
-* negative ints - two's complement only
+* ANSI C99 or later.
+* Negative integers - two's complement only.
+
 
