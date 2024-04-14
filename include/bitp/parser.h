@@ -10,7 +10,7 @@
 
 #include "types.h"
 
-typedef struct bitp_inst_tag {
+typedef struct bitp_parser_tag {
     const char *buf;
     size_t capacity;
     size_t iter;
@@ -50,7 +50,7 @@ bitp_status_t bitp_parser_extract_double(bitp_parser_t *inst, double *res);
     do {                                                                                   \
         int bits_in_type = sizeof(out_type_) * CHAR_BIT;                                   \
         unsigned hi_bits = bits_in_type - (inst_->iter % bits_in_type);                    \
-        int idx_low = inst_->iter / bits_in_type;                                          \
+        int idx_low = sizeof(out_type_) * (inst_->iter / bits_in_type);                    \
         if (hi_bits < n_bits_) {                                                           \
             unsigned_prefix##out_type_ high;                                               \
             memcpy((void *)&high, (void *)&inst_->buf[idx_low], sizeof(high));             \
