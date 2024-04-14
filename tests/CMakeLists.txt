@@ -12,7 +12,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     packer_tests_with_checkers.cpp
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE gtest_main c_binary_parser)
+target_link_libraries(${PROJECT_NAME} PRIVATE gtest_main bitp)
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic)
 
