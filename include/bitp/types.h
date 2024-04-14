@@ -15,6 +15,9 @@
 #define bitp_ntoh_8(x) x
 
 #if defined(__BYTE_ORDER__)
+#warning __BYTE_ORDER__ SHOULD BE DEFINED TO __ORDER_BIG_ENDIAN__ or __ORDER_LITTLE_ENDIAN__. Using __ORDER_LITTLE_ENDIAN__
+#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+#endif
 
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 
@@ -80,10 +83,6 @@
 #define bitp_ntoh_64(x) x
 
 #endif    // __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-
-#else
-#error __BYTE_ORDER__ SHOULD BE DEFINED TO __ORDER_BIG_ENDIAN__ or __ORDER_LITTLE_ENDIAN__
-#endif    // DEFINED(__BYTE_ORDER__)
 
 #ifdef BITP_CHECK_ALL
 #define BITP_CHECK_BUFFER_BOUNDARY 1
