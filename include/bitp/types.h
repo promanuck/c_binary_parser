@@ -14,7 +14,7 @@
 
 #define bitp_ntoh_8(x) x
 
-#if defined(__BYTE_ORDER__)
+#if not defined(__BYTE_ORDER__)
 #warning __BYTE_ORDER__ SHOULD BE DEFINED TO __ORDER_BIG_ENDIAN__ or __ORDER_LITTLE_ENDIAN__. Using __ORDER_LITTLE_ENDIAN__
 #define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
 #endif
