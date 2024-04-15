@@ -13,6 +13,11 @@ target_sources(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE gtest_main bitp)
 
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic)
+if (MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /Wall)   
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
