@@ -79,13 +79,13 @@ bitp_status_t bitp_parser_extract_double(bitp_parser_t *inst, double *res);
 #define BITP_EXTRACT_INT(inst_, out_, out_type_, n_bits_, bswap_) \
     BITP_EXTRACT_INTEGER_(inst_, out_, out_type_, n_bits, u, bswap_)
 
-extern inline void bitp_parser_init(bitp_parser_t *inst, const char *buf, size_t buf_len_bits) {
+inline void bitp_parser_init(bitp_parser_t *inst, const char *buf, size_t buf_len_bits) {
     inst->buf = buf;
     inst->capacity = buf_len_bits;
     inst->iter = 0;
 }
 
-extern inline bitp_status_t bitp_parser_skip(bitp_parser_t *inst, size_t n_bits) {
+inline bitp_status_t bitp_parser_skip(bitp_parser_t *inst, size_t n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
 
     inst->iter += n_bits;
@@ -93,9 +93,7 @@ extern inline bitp_status_t bitp_parser_skip(bitp_parser_t *inst, size_t n_bits)
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_parser_extract_u8(bitp_parser_t *inst,
-                                                   uint8_t *res,
-                                                   unsigned n_bits) {
+inline bitp_status_t bitp_parser_extract_u8(bitp_parser_t *inst, uint8_t *res, unsigned n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, uint8_t);
     BITP_EXTRACT_UINT(inst, res, uint8_t, n_bits, bitp_ntoh_8);
@@ -103,9 +101,7 @@ extern inline bitp_status_t bitp_parser_extract_u8(bitp_parser_t *inst,
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_parser_extract_i8(bitp_parser_t *inst,
-                                                   int8_t *res,
-                                                   unsigned n_bits) {
+inline bitp_status_t bitp_parser_extract_i8(bitp_parser_t *inst, int8_t *res, unsigned n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, int8_t);
     BITP_EXTRACT_INT(inst, res, int8_t, n_bits, bitp_ntoh_8);
@@ -113,9 +109,7 @@ extern inline bitp_status_t bitp_parser_extract_i8(bitp_parser_t *inst,
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_parser_extract_u16(bitp_parser_t *inst,
-                                                    uint16_t *res,
-                                                    unsigned n_bits) {
+inline bitp_status_t bitp_parser_extract_u16(bitp_parser_t *inst, uint16_t *res, unsigned n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, uint16_t);
     BITP_EXTRACT_UINT(inst, res, uint16_t, n_bits, bitp_ntoh_16);
@@ -124,9 +118,7 @@ extern inline bitp_status_t bitp_parser_extract_u16(bitp_parser_t *inst,
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_parser_extract_i16(bitp_parser_t *inst,
-                                                    int16_t *res,
-                                                    unsigned n_bits) {
+inline bitp_status_t bitp_parser_extract_i16(bitp_parser_t *inst, int16_t *res, unsigned n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, int16_t);
     BITP_EXTRACT_INT(inst, res, int16_t, n_bits, bitp_ntoh_16);
@@ -135,9 +127,7 @@ extern inline bitp_status_t bitp_parser_extract_i16(bitp_parser_t *inst,
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_parser_extract_u32(bitp_parser_t *inst,
-                                                    uint32_t *res,
-                                                    unsigned n_bits) {
+inline bitp_status_t bitp_parser_extract_u32(bitp_parser_t *inst, uint32_t *res, unsigned n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, uint32_t);
     BITP_EXTRACT_UINT(inst, res, uint32_t, n_bits, bitp_ntoh_32);
@@ -146,9 +136,7 @@ extern inline bitp_status_t bitp_parser_extract_u32(bitp_parser_t *inst,
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_parser_extract_i32(bitp_parser_t *inst,
-                                                    int32_t *res,
-                                                    unsigned n_bits) {
+inline bitp_status_t bitp_parser_extract_i32(bitp_parser_t *inst, int32_t *res, unsigned n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, int32_t);
     BITP_EXTRACT_INT(inst, res, int32_t, n_bits, bitp_ntoh_32);
@@ -157,9 +145,7 @@ extern inline bitp_status_t bitp_parser_extract_i32(bitp_parser_t *inst,
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_parser_extract_u64(bitp_parser_t *inst,
-                                                    uint64_t *res,
-                                                    unsigned n_bits) {
+inline bitp_status_t bitp_parser_extract_u64(bitp_parser_t *inst, uint64_t *res, unsigned n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, uint64_t);
     BITP_EXTRACT_UINT(inst, res, uint64_t, n_bits, bitp_ntoh_64);
@@ -168,9 +154,7 @@ extern inline bitp_status_t bitp_parser_extract_u64(bitp_parser_t *inst,
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_parser_extract_i64(bitp_parser_t *inst,
-                                                    int64_t *res,
-                                                    unsigned n_bits) {
+inline bitp_status_t bitp_parser_extract_i64(bitp_parser_t *inst, int64_t *res, unsigned n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, int64_t);
     BITP_EXTRACT_INT(inst, res, int64_t, n_bits, bitp_ntoh_64);
@@ -179,7 +163,7 @@ extern inline bitp_status_t bitp_parser_extract_i64(bitp_parser_t *inst,
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_parser_extract_float(bitp_parser_t *inst, float *res) {
+inline bitp_status_t bitp_parser_extract_float(bitp_parser_t *inst, float *res) {
     unsigned float_size_bits = CHAR_BIT * sizeof(float);
     BITP_CHECK_OVERFLOW(inst, float_size_bits);
     BITP_CHECK_PARAM_SIZE(inst, float_size_bits, float);
@@ -190,7 +174,7 @@ extern inline bitp_status_t bitp_parser_extract_float(bitp_parser_t *inst, float
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_parser_extract_double(bitp_parser_t *inst, double *res) {
+inline bitp_status_t bitp_parser_extract_double(bitp_parser_t *inst, double *res) {
     unsigned double_size_bits = CHAR_BIT * sizeof(double);
     BITP_CHECK_OVERFLOW(inst, double_size_bits);
     BITP_CHECK_PARAM_SIZE(inst, double_size_bits, double);

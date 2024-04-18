@@ -44,10 +44,10 @@ bitp_status_t bitp_packer_add_double(bitp_packer_t *inst, double val);
  **************************************************************************************************
  */
 
-extern inline void bitp_packer_init(bitp_packer_t *inst,
-                                    char *buf,
-                                    size_t buf_len_bits,
-                                    int reset_buffer) {
+inline void bitp_packer_init(bitp_packer_t *inst,
+                             char *buf,
+                             size_t buf_len_bits,
+                             int reset_buffer) {
     inst->buf = buf;
     inst->capacity = buf_len_bits;
     inst->iter = 0;
@@ -59,7 +59,7 @@ extern inline void bitp_packer_init(bitp_packer_t *inst,
     }
 }
 
-extern inline void bitp_packer_add_u8_no_check(bitp_packer_t *inst, uint8_t val, size_t n_bits) {
+inline void bitp_packer_add_u8_no_check(bitp_packer_t *inst, uint8_t val, size_t n_bits) {
     unsigned hi_bits = CHAR_BIT - (inst->iter % CHAR_BIT);
     if (hi_bits < n_bits) {
         unsigned low_bits = n_bits - hi_bits;
@@ -73,7 +73,7 @@ extern inline void bitp_packer_add_u8_no_check(bitp_packer_t *inst, uint8_t val,
     inst->iter += n_bits;
 }
 
-extern inline bitp_status_t bitp_packer_add_u8(bitp_packer_t *inst, uint8_t val, size_t n_bits) {
+inline bitp_status_t bitp_packer_add_u8(bitp_packer_t *inst, uint8_t val, size_t n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, uint8_t);
     BITP_CHECK_PARAM_RANGE(val, n_bits, 0);
@@ -81,7 +81,7 @@ extern inline bitp_status_t bitp_packer_add_u8(bitp_packer_t *inst, uint8_t val,
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_packer_add_i8(bitp_packer_t *inst, int8_t val, size_t n_bits) {
+inline bitp_status_t bitp_packer_add_i8(bitp_packer_t *inst, int8_t val, size_t n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, uint8_t);
     BITP_CHECK_PARAM_RANGE(val, n_bits, 1);
@@ -104,7 +104,7 @@ extern inline bitp_status_t bitp_packer_add_i8(bitp_packer_t *inst, int8_t val, 
         }                                                                                   \
     } while (0)
 
-extern inline bitp_status_t bitp_packer_add_u16(bitp_packer_t *inst, uint16_t val, size_t n_bits) {
+inline bitp_status_t bitp_packer_add_u16(bitp_packer_t *inst, uint16_t val, size_t n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, uint16_t);
     BITP_CHECK_PARAM_RANGE(val, n_bits, 0);
@@ -114,7 +114,7 @@ extern inline bitp_status_t bitp_packer_add_u16(bitp_packer_t *inst, uint16_t va
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_packer_add_i16(bitp_packer_t *inst, int16_t val, size_t n_bits) {
+inline bitp_status_t bitp_packer_add_i16(bitp_packer_t *inst, int16_t val, size_t n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, int16_t);
     BITP_CHECK_PARAM_RANGE(val, n_bits, 1);
@@ -127,7 +127,7 @@ extern inline bitp_status_t bitp_packer_add_i16(bitp_packer_t *inst, int16_t val
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_packer_add_u32(bitp_packer_t *inst, uint32_t val, size_t n_bits) {
+inline bitp_status_t bitp_packer_add_u32(bitp_packer_t *inst, uint32_t val, size_t n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, uint32_t);
     BITP_CHECK_PARAM_RANGE(val, n_bits, 0);
@@ -137,7 +137,7 @@ extern inline bitp_status_t bitp_packer_add_u32(bitp_packer_t *inst, uint32_t va
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_packer_add_i32(bitp_packer_t *inst, int32_t val, size_t n_bits) {
+inline bitp_status_t bitp_packer_add_i32(bitp_packer_t *inst, int32_t val, size_t n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, int32_t);
     BITP_CHECK_PARAM_RANGE(val, n_bits, 1);
@@ -150,7 +150,7 @@ extern inline bitp_status_t bitp_packer_add_i32(bitp_packer_t *inst, int32_t val
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_packer_add_u64(bitp_packer_t *inst, uint64_t val, size_t n_bits) {
+inline bitp_status_t bitp_packer_add_u64(bitp_packer_t *inst, uint64_t val, size_t n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, uint64_t);
     BITP_CHECK_PARAM_RANGE(val, n_bits, 0);
@@ -160,7 +160,7 @@ extern inline bitp_status_t bitp_packer_add_u64(bitp_packer_t *inst, uint64_t va
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_packer_add_i64(bitp_packer_t *inst, int64_t val, size_t n_bits) {
+inline bitp_status_t bitp_packer_add_i64(bitp_packer_t *inst, int64_t val, size_t n_bits) {
     BITP_CHECK_OVERFLOW(inst, n_bits);
     BITP_CHECK_PARAM_SIZE(inst, n_bits, int64_t);
     BITP_CHECK_PARAM_RANGE(val, n_bits, 1);
@@ -173,7 +173,7 @@ extern inline bitp_status_t bitp_packer_add_i64(bitp_packer_t *inst, int64_t val
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_packer_add_float(bitp_packer_t *inst, float val) {
+inline bitp_status_t bitp_packer_add_float(bitp_packer_t *inst, float val) {
     BITP_CHECK_OVERFLOW(inst, CHAR_BIT * 4);
 
     uint32_t valu;
@@ -184,7 +184,7 @@ extern inline bitp_status_t bitp_packer_add_float(bitp_packer_t *inst, float val
     return BITP_OK;
 }
 
-extern inline bitp_status_t bitp_packer_add_double(bitp_packer_t *inst, double val) {
+inline bitp_status_t bitp_packer_add_double(bitp_packer_t *inst, double val) {
     BITP_CHECK_OVERFLOW(inst, CHAR_BIT * 8);
 
     uint64_t valu;
